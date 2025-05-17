@@ -24,7 +24,8 @@ services:
     ports: 
       - 5173:5173
     volumes:
-      - ./frontend:/app
+    
+       - ./frontend:/app/src
     tty: true
     environment: 
       - VITE_MAIN_URL=http://localhost:3000/api
