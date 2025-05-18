@@ -3,6 +3,23 @@ networks:
     driver: bridge
 
 services:
+  mongo-server:
+    image: mongodb/mongodb-community-server
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./docker/docker-entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+  mongo-admin-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo-server:27017/
+    depends_on:
+      - mongo-server
+      
   backend:
     build: 
       context: ./backend
@@ -14,6 +31,7 @@ services:
       - MONGO_URL=mongodb+srv://nataless:kK9ox56hIIAfxUrV@cluster0.rywwl9o.mongodb.net
       - JWT_SECRET=secret
       - JWT_EXPIRES=3d
+    
     networks:
       - app
 
